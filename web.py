@@ -5,6 +5,8 @@ todos = readFile()
 
 def add_todo():
     todo = st.session_state["todo_input"]
+    if todo.strip() == "":
+        return
     todos.append(todo)
     writeFile(todos)
 
