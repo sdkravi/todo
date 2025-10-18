@@ -4,7 +4,7 @@ import os
 import time
 
 clock=time.strftime("%b %d, %Y %H:%M:%S") # Current time
-fg.theme('DarkAmber') # Add a touch of color
+fg.theme('Black') # Add a touch of color
 
 if not os.path.exists('todo.txt'):
     with open('todo.txt','w') as file:
