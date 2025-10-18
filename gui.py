@@ -1,11 +1,16 @@
 from functions import readFile, writeFile
 import FreeSimpleGUI as fg
 import os
+import time
+
+clock=time.strftime("%b %d, %Y %H:%M:%S") # Current time
+fg.theme('DarkAmber') # Add a touch of color
 
 if not os.path.exists('todo.txt'):
     with open('todo.txt','w') as file:
         pass
 
+clock_label=fg.Text(clock,font=("Helvetica",14),text_color='green',key='clock')  # Clock Label
 
 button1=fg.Button("Add") # Add Button
 text=fg.Text("Enter a to-do") # Label Text
@@ -15,15 +20,25 @@ button2=fg.Button("Edit")
 button3=fg.Button("Complete")
 listBox=fg.Listbox(values=readFile(),enable_events=True,size=[45,10],key='todoList')
 
+exit_button=fg.Button("Exit") # Exit Button
 
 
-window=fg.Window("To-do App",layout=[[text],
+window=fg.Window("To-do App",layout=[[clock_label],
+                                     [text],
                                      [textInput, button1],
-                                     [listBox,button2,button3]])
+                                     [listBox,button2,button3],
+                                     [exit_button]],font=("Helvetica",12))
 
 while(True):
-    event, values = window.read()
+
+    event, values = window.read(timeout=1000) # Update every second
+
+    if event in (fg.WINDOW_CLOSED, 'none', 'Exit'): # Exit conditions
+        break
+
     print(event,values)
+    window['clock'].update(value=time.strftime("%b %d, %Y %H:%M:%S"))
+
     match event:
         case fg.WINDOW_CLOSED:
             break
