@@ -1,6 +1,10 @@
 from functions import readFile, writeFile
 import FreeSimpleGUI as fg
+import os
 
+if not os.path.exists('todo.txt'):
+    with open('todo.txt','w') as file:
+        pass
 
 
 button1=fg.Button("Add") # Add Button
@@ -24,30 +28,41 @@ while(True):
         case fg.WINDOW_CLOSED:
             break
         case 'Add':
+            if values['todo']=="":
+                fg.popup("Please enter a to-do item.",title='Error!',font=("Helvetica",12))
+                continue
             todos=readFile()
             todos.append(values['todo'])
             writeFile(todos)
             listBox.update(todos)
             window['todo'].update(value="")
         case 'Edit':
-            todos=readFile()
-            newTodo=values['todo']
-            oldTodo=values['todoList'][0]
-            index=todos.index(oldTodo)
-            todos[index]=newTodo
-            writeFile(todos)
-            listBox.update(todos)
+            try:
+                todos=readFile()
+                newTodo=values['todo']
+                oldTodo=values['todoList'][0]
+                index=todos.index(oldTodo)
+                todos[index]=newTodo
+                writeFile(todos)
+                listBox.update(todos)
+            except IndexError:
+                fg.popup("Please select an item to edit.",title='Error!',font=("Helvetica",12))
         case 'Complete':
-            todos=readFile()
-            popTodo=values['todo']
-            index=todos.index(popTodo)
-            todos.pop(index)
-            writeFile(todos)
-            listBox.update(todos)
-            textInput.update(value="")
-            
+            try:
+                todos=readFile()
+                popTodo=values['todo']
+                index=todos.index(popTodo)
+                todos.pop(index)
+                writeFile(todos)
+                listBox.update(todos)
+                textInput.update(value="")
+            except ValueError:
+                fg.popup("No Item is selected, please correct",title='Error!',font=("Helvetica",9))
         case 'todoList':
-            selectedTodo=values['todoList'][0]
-            textInput.update(value=selectedTodo)
+            try:
+                selectedTodo=values['todoList'][0]
+                textInput.update(value=selectedTodo)
+            except IndexError:
+                pass
         
 window.close()
