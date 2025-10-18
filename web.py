@@ -12,8 +12,14 @@ st.title("A to-do App")
 st.subheader("This is a to-do list")
 st.write("please suggest!.")
 
-for todo in todos:
-    st.checkbox(todo)
+for index,todo in enumerate(todos):
+    checkbox = st.checkbox(todo,key = todo)
+    if checkbox: # if checked, mark as complete
+        todos.pop(index) # remove the completed todo
+        writeFile(todos) # update the file
+        del st.session_state[todo] # remove checkbox state
+        st.rerun() # Rerun the app to reflect changes
+
 
 st.text_input("", placeholder="Enter a to-do item...",key="todo_input", on_change=add_todo)
 
